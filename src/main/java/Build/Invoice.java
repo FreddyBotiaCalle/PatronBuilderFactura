@@ -27,4 +27,12 @@ public class Invoice {
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
     }
+
+    public String getTotalPrice() {
+        return "";
+    }
+
+
+    public void applyDiscount() {
+    }
 }

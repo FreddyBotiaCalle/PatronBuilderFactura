@@ -1,38 +1,36 @@
 package Product;
-import Build.Invoice;
 import Build.InvoiceItem;
 
 import java.util.List;
 
 public class SecondItemDiscountBuilder extends InvoiceBuilder {
-    private int itemCount;
-    private double secondItemDiscount;
+    private double discountPercentage;
 
-    public SecondItemDiscountBuilder() {
-        itemCount = 0;
-        secondItemDiscount = 0.1; // 10% de descuento en el segundo ítem
+    public SecondItemDiscountBuilder(double discountPercentage) {
+        this.discountPercentage = discountPercentage;
     }
 
     @Override
     public void addItem(String productName, double price) {
         invoice.addItem(new InvoiceItem(productName, price));
-        if (productName.equals("bufanda de seda")) {
-            itemCount++;
-        }
     }
 
     @Override
     public void applyDiscount() {
-        if (itemCount >= 2) {
-            List<InvoiceItem> items = invoice.getItems();
-            double totalDiscount = 0;
-            for (InvoiceItem item : items) {
-                if (item.getProductName().equals("bufanda de seda")) {
-                    totalDiscount += item.getPrice() * secondItemDiscount;
-                    item.setPrice(item.getPrice() * (1 - secondItemDiscount)); // Aplicar descuento al segundo ítem
-                }
+        List<InvoiceItem> items = invoice.getItems();
+        double totalDiscount = 0;
+        boolean secondItemFound = false; // Bandera para rastrear si se ha encontrado el segundo ítem igual
+        for (int i = 0; i < items.size(); i++) {
+            InvoiceItem currentItem = items.get(i);
+            totalDiscount += currentItem.getPrice() * discountPercentage;
+
+            // Verificar si es el segundo ítem igual y aplicar descuento
+            if (!secondItemFound && i > 0 && currentItem.getProductName().equals(items.get(i - 1).getProductName())) {
+                double discountedPrice = currentItem.getPrice() * (1 - discountPercentage);
+                currentItem.setPrice(discountedPrice);
+                secondItemFound = true;
             }
-            System.out.println("Descuento aplicado: $" + totalDiscount);
         }
+        System.out.println("Descuento aplicado: $" + totalDiscount);
     }
 }

@@ -31,9 +31,11 @@ import java.util.List;
 //    }
 //}
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
+import java.util.List;
+
+import java.util.Scanner;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -54,8 +56,14 @@ public class Main {
             shoppingCart.addItem(new ShoppingCartItem(productName, price));
         }
 
-        // Crear instancia de InvoiceDirector con SecondItemDiscountBuilder
-        InvoiceBuilder builder = new SecondItemDiscountBuilder();
+        // Crear instancia de InvoiceBuilder con SecondItemDiscountBuilder o FirstThreeItemsAndFourthDiscountBuilder
+        double discountPercentage = 0.1; // Descuento del 10% para SecondItemDiscountBuilder
+        // double firstThreeItemsDiscountPercentage = 0.1; // Descuento del 10% para FirstThreeItemsAndFourthDiscountBuilder
+        // double fourthItemDiscountPercentage = 0.05; // Descuento del 5% para FirstThreeItemsAndFourthDiscountBuilder
+
+        InvoiceBuilder builder = new SecondItemDiscountBuilder(discountPercentage);
+        // InvoiceBuilder builder = new FirstThreeItemsAndFourthDiscountBuilder(firstThreeItemsDiscountPercentage, fourthItemDiscountPercentage);
+
         InvoiceDirector director = new InvoiceDirector(builder);
 
         // Crear factura con el director y los ítems del carrito
@@ -65,12 +73,14 @@ public class Main {
         // Mostrar información de la factura
         System.out.println("\nFACTURA DE COMPRA");
         System.out.println("Cliente: " + invoice.getCustomerName());
+        System.out.println("Ítems:");
         List<InvoiceItem> items = invoice.getItems();
-        System.out.println("Ítems de la factura:");
         for (InvoiceItem item : items) {
             System.out.println("- " + item.getProductName() + ": $" + item.getPrice());
         }
+        System.out.println("Total: $" + invoice.getTotalPrice());
 
-        scanner.close();
+        // Aplicar descuento
+        invoice.applyDiscount();
     }
 }
